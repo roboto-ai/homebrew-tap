@@ -22,15 +22,18 @@ for tuple in 'arm: aarch64' 'intel: x86_64'; do
   declare -a platform=($tuple)
   tag=${platform[0]}
   arch=${platform[1]}
+
   cli_url="${download_url_prefix}/roboto-macos-${arch}"
-  cli_sha=$(curl -Ls ${cli_url} | sha256sum)
+  cli_sha=$(curl -sSL ${cli_url} | sha256sum | cut -d ' ' -f 1)
+  echo ${cli_sha}
   sed -f - "${inline[@]}" "${cli_cask}" <<EOF
 s/version "[^"]*"/version "${version}"/
 s/${tag} "[0-9a-f]*"/${tag} "${cli_sha}"/
 EOF
 
   agent_url="${download_url_prefix}/roboto-agent-macos-${arch}"
-  agent_sha=$(curl -Ls ${agent_url} | sha256sum)
+  agent_sha=$(curl -sSL ${agent_url} | sha256sum | cut -d ' ' -f 1)
+  echo ${agent_sha}
   sed -f - "${inline[@]}" "${agent_cask}" <<EOF
 s/version "[^"]*"/version "${version}"/
 s/${tag} "[0-9a-f]*"/${tag} "${agent_sha}"/
