@@ -14,10 +14,10 @@ cask "roboto-agent" do
     end
   end
 
-  version "0.17.0"
+  version "0.18.0"
   if OS.mac?
-    sha256 arm: "03cd27ac001e8bd12b56d331a46f211b01c8bb56aaf4cb4bebacd1efda23fa5c",
-           intel: "6debd1670dc3647519515fc5944da0bd45277da9cd276cd1364d8630666e8ed4"
+    sha256 arm: "a8a5ab485a9c128708b871454604fd4f5759f343b09ffcb285184be62f0b0918",
+           intel: "9963d817695002ac4316ea0bb826385d9c6f33b8524102f0e86717456e767555"
   else
     # Casks not supported on Linux: https://github.com/Linuxbrew/brew/issues/742
     # sha256 arm: "...",
