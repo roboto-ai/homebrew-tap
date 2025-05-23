@@ -1,7 +1,13 @@
 #/bin/env bash
 set -eufo pipefail
 
-# A script to update the version and shas
+<<description
+ A script to update the version and shas
+
+ Usage: ./bump_version.sh <version>
+ Example: ./bump_version.sh 0.0.1
+description
+
 version=${1/v/}
 cli_cask="Casks/roboto.rb"
 agent_cask="Casks/roboto-agent.rb"
