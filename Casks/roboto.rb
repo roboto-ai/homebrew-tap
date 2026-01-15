@@ -13,10 +13,10 @@ cask "roboto" do
     end
   end
 
-  version "0.34.0"
+  version "0.35.1"
   if OS.mac?
-    sha256 arm: "1caa1c7d701112075cdeb94f13db43d33bd7e72cb3d21361ce20756b12a21dcc",
-           intel: "02e2efc0fe1dd22a0924ff2927d6815f09beeab37ea6c657b503b8f3d3d90f42"
+    sha256 arm: "0d1aca9bd93212e268e492842304f8c259f3ab4f1883526ceb370a0c1a702e29",
+           intel: "e16b40309e05da5d4aad60521f9798657e0d6689a3db9ea52099b8ba3d930f87"
   else
     # Casks not supported on Linux: https://github.com/Linuxbrew/brew/issues/742
     # sha256 arm: "...",
