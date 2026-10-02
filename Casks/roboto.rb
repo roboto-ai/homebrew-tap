@@ -22,8 +22,7 @@ cask "roboto" do
     # sha256 arm: "...",
     #        intel: "..."
   end
-  url "https://github.com/roboto-ai/roboto-python-sdk/releases/download/v#{version}/roboto-#{Utils.os}-#{Utils.arch}",
-      verified: "https://github.com/roboto-ai/"
+  url "https://github.com/roboto-ai/roboto-python-sdk/releases/download/v#{version}/roboto-#{Utils.os}-#{Utils.arch}"
 
   name "Roboto"
   desc "Command line interface for interacting with Roboto AI"
@@ -33,15 +32,20 @@ cask "roboto" do
 
   binary Utils.binary, target: "roboto"
 
-  preflight do
-    target = config.binarydir / "roboto"
-    if target.exist? && !target.symlink?
-      opoo "replacing self-updated #{target}"
-      target.delete
+  # Upgrades and reinstalls unlink the previous version before this runs, so a `roboto` here is a separate copy
+  # of the CLI that Homebrew won't replace, most likely a downloaded release binary or a pip install.
+  preflight_steps do
+    if_path_exists "bin/roboto", base: :homebrew_prefix do
+      warn "{{HOMEBREW_PREFIX}}/bin/roboto already exists and isn't from this cask, so Homebrew won't replace it. " \
+           "You can remove or move it, then try again."
     end
   end
 
-  postflight do
-    Quarantine.release!(download_path: "#{caskroom_path}/#{version}/#{Utils.binary}") if Quarantine.available?
+  # The release binary is only ad-hoc signed, so Gatekeeper blocks it while it carries the quarantine
+  # attribute Homebrew puts on cask downloads.
+  postflight_steps do
+    on_macos do
+      run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{staged_path}}"]
+    end
   end
 end
