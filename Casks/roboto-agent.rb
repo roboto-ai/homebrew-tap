@@ -33,12 +33,12 @@ cask "roboto-agent" do
 
   binary Utils.binary, target: "roboto-agent"
 
-  # Upgrades and reinstalls unlink the previous version before this runs, so an existing `roboto-agent` here is
-  # one Homebrew will refuse to overwrite.
+  # Upgrades and reinstalls unlink the previous version before this runs, so a `roboto-agent` here is a separate
+  # copy that Homebrew won't replace, most likely a downloaded release binary.
   preflight_steps do
     if_path_exists "bin/roboto-agent", base: :homebrew_prefix do
-      warn "{{HOMEBREW_PREFIX}}/bin/roboto-agent already exists and isn't from this cask. Remove it and " \
-           "install again."
+      warn "{{HOMEBREW_PREFIX}}/bin/roboto-agent already exists and isn't from this cask, so Homebrew won't " \
+           "replace it. You can remove or move it, then try again."
     end
   end
 
@@ -46,11 +46,7 @@ cask "roboto-agent" do
   # attribute Homebrew puts on cask downloads.
   postflight_steps do
     on_macos do
-      run "/usr/bin/xattr",
-          args:         ["-d", "com.apple.quarantine", Utils.binary],
-          chdir:        ".",
-          must_succeed: false,
-          print_stderr: false
+      run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{staged_path}}"]
     end
   end
 end
